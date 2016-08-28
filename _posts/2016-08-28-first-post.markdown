@@ -18,23 +18,35 @@ probably asking <i>terrible</i> questions. This post is about how to not ask
 <i>Spoiler: use Active Record methods.</i>
 
 <h2>What are <i>good/terrible</i> questions?</h2>
-<i>good</i> questions are <b>specific</b>. They tell the DB <b>exactly</b> what
+<i>Good</i> questions are <b>specific</b>. They tell the DB <b>exactly</b> what
 they want to know, and often the DB has been prepped to receive them.
 
-<i>terrible</i> questions are <b>vague</b>. They don't tell the poor DB what
-they really want, so the DB tries to give everything, but often still fails.
+<i>Terrible</i> questions are <b>vague</b>. The author of such a question acts
+as though they don't know what they want, so they often ask for far too much.
 <h2>Be More Specific</h2>
-`select`
-<h2>Reverse Right</h2>
-`reverse_order` is not the same as `reverse`
-<h2>n+1</h2>
+<h3>Something is Better than Everything</h3>
+Want only a single attribute from a model? Use `pluck`. For blog application with
+a model `Post` having `title`, `author`, `body` methods, if you just want titles
+`Post.pluck(:title)` performs
+{% highlight ruby %}
+SELECT posts.title FROM posts
+{% endhighlight %}
+avoiding the large `body` portion of the post.
+
+Have a model with a large attribute, or just need a few attributes? `select` or
+is your answer.
+<h3>Batching</h3>
+`find_each`
+<h3>Paginate</h3>
+will_paginate needs to be at the right part of the query.
+<h3>n+1</h3>
 `include` is magic.  
 https://github.com/flyerhzm/bullet
-<h2>Cache Counters</h2>
+
+<h2>Sort Correctly</h2>
+`reverse_order` is not the same as `reverse`
+<h2>Coach the DB</h2>
+<h3>Cache Counters</h3>
 `size` is not the same as `length`
-<h2>Indexes</h2>
+<h3>Indexes</h3>
 FK's obviously deserve indices, but what other fields could count?
-<h2>Batching</h2>
-`find_each`
-<h2>Paginate</h2>
-will_paginate needs to be at the right part of the query.
