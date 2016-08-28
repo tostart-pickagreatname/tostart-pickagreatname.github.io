@@ -26,17 +26,17 @@ as though they don't know what they want, so they often ask for far too much.
 <h2>Be More Specific</h2>
 <h3>Something is Better than Everything</h3>
 For a blog application with a model `Post` having `title`, `author`, and `body`
-attributes you can reasonably expect that `body` will frequently be quite large.
-By default all attributes are returned. Let's avoid that.
+attributes you can reasonably expect that `body` will be large.
+Active Record will return all attributes by default, so let's avoid that.
 
-<i>Want only a single attribute from a model?</i> Use `pluck` to ask for it. if you just want titles
-`Post.pluck(:title)` performs
+<i>Want only a single attribute from a model?</i> Use `pluck` to ask for it. If
+you just want a list of titles: `Post.pluck(:title)` performs
 {% highlight ruby %}
 SELECT posts.title FROM posts
 {% endhighlight %}
 avoiding the large `body` portion of the post.
 
-<i>Want more attributes?</i> Use `select`. `Post.select(:title, :author)`
+<i>Want more attributes?</i> Use `select`: `Post.select(:title, :author)` executes
 {% highlight ruby %}
 SELECT posts.title posts.author FROM posts
 {% endhighlight %}
