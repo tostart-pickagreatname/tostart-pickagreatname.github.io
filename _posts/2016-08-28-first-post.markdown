@@ -53,13 +53,16 @@ than you need. For example, suppose you are paginating with a gem like `will_pag
 `will_paginate` will try to limit a query to the number of rows it is paginating.
 Indeed, if you do something like
 {% highlight ruby %}
-Post.reverse_order.paginate(page: 1, per_page: 30)
-{% endhighlight %}
-then your SQL query will return at most 30 rows. HOWEVER, if instead you do
-{% highlight ruby %}
 Post.all.reverse.paginate(page: 1, per_page: 30)
 {% endhighlight %}
 then the SQL query will pull <b>all</b> the records down and paginate the list.
+HOWEVER, if instead you do
+{% highlight ruby %}
+Post.reverse_order.paginate(page: 1, per_page: 30)
+{% endhighlight %}
+then your SQL query will return at most 30 rows, which will scale much more
+efficiently.
+
 
 <h3>Batching</h3>
 `find_each`
