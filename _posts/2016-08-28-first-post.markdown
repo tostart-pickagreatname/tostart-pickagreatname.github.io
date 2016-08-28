@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Tuning Active Record Queries"
+title:  "Faster Active Record Queries"
 date:   2016-08-28 14:25:08 -0400
 categories: jekyll update
 ---
@@ -42,10 +42,27 @@ SELECT posts.title posts.author FROM posts
 {% endhighlight %}
 also avoiding the large `body` portion of the post.
 
+<h3>`reverse` is not `reverse_order`</h3>
+TL;DR: This is a simple gotcha: `Post.all.reverse` performs a `SELECT *` and then reverses
+the , whereas `Post.all.reverse_order` includes an `ORDER BY` statement.
+
+You want to use `reverse_order`. `reverse` converts the ActiveRecord::Relation
+into a list. That is, it executes the SQL query and then reverses the returned
+values. If you only want a subset of that list you will be returning much more
+than you need. For example, suppose you are paginating with a gem like `will_paginate`.
+`will_paginate` will try to limit a query to the number of rows it is paginating.
+Indeed, if you do something like
+{% highlight ruby %}
+Post.reverse_order.paginate(page: 1, per_page: 30)
+{% endhighlight %}
+then your SQL query will return at most 30 rows. HOWEVER, if instead you do
+{% highlight ruby %}
+Post.all.reverse.paginate(page: 1, per_page: 30)
+{% endhighlight %}
+then the SQL query will pull <b>all</b> the records down and paginate the list.
+
 <h3>Batching</h3>
 `find_each`
-<h3>Paginate</h3>
-will_paginate needs to be at the right part of the query.
 <h3>n+1</h3>
 `include` is magic.  
 https://github.com/flyerhzm/bullet
