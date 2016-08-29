@@ -85,4 +85,4 @@ fejoefjwiof=
 Once this is done `googleauth` will use these environment variables for the
 `get_application_default` message.
 
-[googleauth]: "https://github.com/google/google-auth-library-ruby"
+[googleauth]: https://github.com/google/google-auth-library-ruby
