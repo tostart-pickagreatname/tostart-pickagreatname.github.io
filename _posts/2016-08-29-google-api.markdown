@@ -4,8 +4,6 @@ title:  "Querying Google Compute with Ruby"
 date:   2016-08-29 15:00:00 -0400
 categories: gcloud api
 ---
-<i>Note: This is a work in progress...</i>
-
 Recently I queried the Google Compute Engine API and found the authentication setup to be difficult
 to navigate. I felt that this process needed a single document example workflow,
 which I have chosen to publish here. This document assumes you've already got a
