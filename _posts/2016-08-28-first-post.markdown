@@ -10,20 +10,8 @@ development with little data stored. If this works for you then you may stop
 reading here. However, if you find your pages load slowly as your database increases
 in size, then re-examining these calls can be a worthwhile step.
 
-Databases are really good at dealing with data. As a result, they know how to
-efficiently answer most <i>good</i> questions. If your DB seems slow then you're
-probably asking <i>terrible</i> questions. This post is about how to not ask
-<i>terrible</i> questions.
+This blog post contains some useful methods for dealing with common scenarios.
 
-<i>Spoiler: use Active Record methods.</i>
-
-<h2>What are <i>good/terrible</i> questions?</h2>
-<i>Good</i> questions are <b>specific</b>. They tell the DB <b>exactly</b> what
-they want to know, and often the DB has been prepped to receive them.
-
-<i>Terrible</i> questions are <b>vague</b>. The author of such a question acts
-as though they don't know what they want, so they often ask for far too much.
-<h2>Be More Specific</h2>
 <h3>Something is Better than Everything</h3>
 For a blog application with a model `Post` having `title`, `author`, and `body`
 attributes you can reasonably expect that `body` will be large.
@@ -90,8 +78,8 @@ Not sure if you're doing this somewhere? There are a few gems to help you look
 for this problem. I recommend the [bullet gem][bullet].
 
 <h3>Batching</h3>
-Suppose processing your query would be fast, but it's taking up too much memory?
-If there are a large number of rows in the table, we may use `find_each` to break
+Suppose processing your query would be fast, but there are a lot of rows, so it's
+taking up a lot of memory. Then we may use `find_each` to break
 the query up into batches to reduce memory usage. The default batch size is 1000. If we want to perform
 a block against every post using a method of `update_post`, we could do this by
 {% highlight ruby %}
@@ -110,5 +98,14 @@ Most of the above was discovered by following a 2-step process.
 However, many of the efficiencies came only <i>after</i> I knew what I was going
 to use the data for. It's important not to get too hung up on this at an early stage.
 
+Rails console gives us some great information to go on, like how long it takes
+our database to process the query. There is a lot more to this than I could cover
+in this blog, but I hope that these ideas are helpful for readers. In general:
+
+- <i>Good</i> queries are <b>specific</b>. They tell the DB <b>exactly</b> what
+they want to know and leverage Active Record methods to do so.
+- <i>Terrible</i> queries are <b>vague</b>. The author of such a question acts
+as though they don't know what they want, so they often ask for too much, or don't
+include data that needs to be used later.
 
 [bullet]: https://github.com/flyerhzm/bullet
