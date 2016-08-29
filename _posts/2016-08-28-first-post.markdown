@@ -30,6 +30,9 @@ SELECT posts.title posts.author FROM posts
 {% endhighlight %}
 also avoiding the large `body` portion of the post.
 
+Try to avoid using these too early in the development process, or you might find
+yourself being forced to re-add attributes to these calls.
+
 <h3>`reverse` is not `reverse_order`</h3>
 You want to use `reverse_order` instead of `reverse`. `reverse` converts the ActiveRecord::Relation
 into a list. That is, it executes the SQL query and then reverses the returned
