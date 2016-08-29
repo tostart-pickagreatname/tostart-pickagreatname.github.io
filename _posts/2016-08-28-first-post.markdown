@@ -87,7 +87,7 @@ SELECT authors.* FROM authors WHERE author.id IN (<list of ids from posts table>
 {% endhighlight %}
 
 Not sure if you're doing this somewhere? There are a few gems to help you look
-for this problem. I recommend the [bullet]: https://github.com/flyerhzm/bullet gem.
+for this problem. I recommend the [bullet gem][bullet].
 
 <h3>Batching</h3>
 What if your query needs to be large but it is using too much memory? We can
@@ -103,3 +103,5 @@ FK's obviously deserve indices, but what other fields could count?
 
 `Post.all.reverse` performs a `SELECT *` and then reverses
 the order, whereas `Post.all.reverse_order` includes an `ORDER BY` statement.
+
+[bullet]: https://github.com/flyerhzm/bullet
