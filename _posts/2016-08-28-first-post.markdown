@@ -105,8 +105,8 @@ once.
 <h2>Remarks</h2>
 Most of the above was discovered by following a 2-step process.
 
-- I found a page that rendered slowly.
-- I ran the queries in rails console and counted/examined the SQL queries.
+1. I found a page that rendered slowly.
+2. I ran the queries in rails console and counted/examined the SQL queries.
 However, many of the efficiencies came only <i>after</i> I knew what I was going
 to use the data for. It's important not to get too hung up on this at an early stage.
 
