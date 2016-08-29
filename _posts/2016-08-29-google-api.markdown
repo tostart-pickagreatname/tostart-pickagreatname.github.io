@@ -6,23 +6,38 @@ categories: gcloud api
 ---
 <i>Note: This is a work in progress...</i>
 
-Recently I queried the Google Compute API and found the auth. setup to be difficult
+Recently I queried the Google Compute Engine API and found the authentication setup to be difficult
 to navigate. I felt that this process needed a single document example workflow,
-which I have chosen to publish here.
+which I have chosen to publish here. This document assumes you've already got a
+Google Cloud project running.
 
-<h2>Using .json File</h2>
 Steps:
 
 1. add service account
-2. download service account json
-3. pick scope
-4. set googleauth creds
-5. create compute service instance
-6. query the instances
+The service account is typically used for communication from a backend server to
+the Google Cloud APIs. You can create a new service account and download the
+json credential file by following [Google's documentation][service-account].
+2. enable the associated API
+Different Google Cloud components allow querying via different APIs. To make your
+project's data available via an API this API must first be enabled for your project.
+In our case, we'll use the Google Compute Engine API. Go to your project's API
+dashboard, pick the API you're interested in working with, and enable it.
+3. set googleauth creds
+There are two methods covered below.  Both use data from the service account
+json file along with the `googleauth` gem.  The scope is a list of API endpoints that your authentication is
+supposed to be good for. The scopes are [listed by Google][scopes] for quick reference.
+4. run your queries
+There are two gems I've used to query google. The `gcloud` gem provides more of a
+high-level administrative view, whereas the `google-api-client` gem gives more
+granular information. Working with the `google-api-client` usually involves
+creating an instance of the associated service class and
+then running queries as required.
 
+<h2>Using .json File</h2>
+Remember that json file you downloaded in step 1? The `googleauth` gem can be pointed
+directly at it by setting an environment variable. Then it's
 `export GOOGLE_APPLICATION_CREDENTIALS=~/secrets.json`
 
-Then do include things that you care about.
 {% highlight ruby %}
 require 'googleauth'
 
@@ -30,17 +45,6 @@ scopes = ['https://www.googleapis.com/auth/cloud-platform',
           'https://www.googleapis.com/auth/compute']
 creds = Google::Auth.get_application_default(scopes) #produces a DefaultCredentials method
 
-{% endhighlight %}
-
-<h3>query compute instances</h3>
-
-{% highlight ruby %}
-require 'google/apis/compute_v1'
-cs = Google::Apis::ComputeV1::ComputeService.new
-cs.authorization = creds
-project = "your_project_name"
-zone = "us-east1-b" # for example, depends on where your instance is.
-cs.list_instances(project, zone)
 {% endhighlight %}
 
 <h2>Using Environment Variables</h2>
@@ -85,4 +89,25 @@ fejoefjwiof=
 Once this is done `googleauth` will use these environment variables for the
 `get_application_default` message.
 
+<h3>query compute instances</h3>
+Here's a quick and dirty example of how to query the Compute service for a list
+of compute instances. We need to first make the Compute Service instance and then
+tell it what our form of authorization is, referring to the above generations of
+the `creds` variable. Once that's set it's ready to go, so we have:
+
+{% highlight ruby %}
+require 'google/apis/compute_v1'
+cs = Google::Apis::ComputeV1::ComputeService.new
+cs.authorization = creds
+project = "your_project_name"
+zone = "us-east1-b" # for example, depends on where your instance is.
+cs.list_instances(project, zone)
+{% endhighlight %}
+
+That's it!  For reference I found [Google's github repo][googleapi] to be the
+best source for methods, with fairly readable comments.
+
 [googleauth]: https://github.com/google/google-auth-library-ruby
+[service-account]: https://cloud.google.com/storage/docs/authentication#generating-a-private-key
+[scopes]: https://developers.google.com/identity/protocols/googlescopes
+[googleapi]: https://github.com/google/google-api-ruby-client
