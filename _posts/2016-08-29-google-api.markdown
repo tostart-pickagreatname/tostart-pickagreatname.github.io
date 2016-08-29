@@ -11,7 +11,9 @@ Steps:
 2. download json
 3. pick scope
 4. set googleauth creds
+
 `export GOOGLE_APPLICATION_CREDENTIALS=~/secrets.json`
+
 Then do include things that you care about.
 {% highlight ruby %}
 require 'googleauth'
@@ -19,9 +21,11 @@ require 'googleauth'
 scopes = ['https://www.googleapis.com/auth/cloud-platform',
           'https://www.googleapis.com/auth/compute']
 creds = Google::Auth.get_application_default(scopes) #produces a DefaultCredentials method
+
 {% endhighlight %}
 
 5. query compute instances
+
 {% highlight ruby %}
 require 'google/apis/compute_v1'
 cs = Google::Apis::ComputeV1::ComputeService.new
