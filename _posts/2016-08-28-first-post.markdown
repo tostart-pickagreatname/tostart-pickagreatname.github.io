@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Faster Active Record Queries"
+title:  "Tuning Active Record Queries"
 date:   2016-08-28 14:25:08 -0400
 categories: jekyll update
 ---
@@ -43,10 +43,7 @@ SELECT posts.title posts.author FROM posts
 also avoiding the large `body` portion of the post.
 
 <h3>`reverse` is not `reverse_order`</h3>
-TL;DR: This is a simple gotcha: `Post.all.reverse` performs a `SELECT *` and then reverses
-the , whereas `Post.all.reverse_order` includes an `ORDER BY` statement.
-
-You want to use `reverse_order`. `reverse` converts the ActiveRecord::Relation
+You want to use `reverse_order` instead of `reverse`. `reverse` converts the ActiveRecord::Relation
 into a list. That is, it executes the SQL query and then reverses the returned
 values. If you only want a subset of that list you will be returning much more
 than you need. For example, suppose you are paginating with a gem like `will_paginate`.
@@ -63,17 +60,46 @@ Post.reverse_order.paginate(page: 1, per_page: 30)
 then your SQL query will return at most 30 rows, which will scale much more
 efficiently.
 
+<h3>Including Everything You Need</h3>
+Suppose each `Post` `has_one` `author` via `author_id` with an index page for the
+posts which displays each post and its author's name via the `name` attribute of
+`Author`.  Suppose you do this with `@posts = Post.all` in the controller and
+the following in the view
+{% highlight ruby %}
+@posts.each do |post|
+  <%= post.title %>, by <%= post.author.name %>
+end
+{% endhighlight %}
+The result is that for each `post`, a call is made to the `authors` table of the
+sort
+{% highlight ruby %}
+SELECT authors.* FROM authors WHERE author.id == #{post.author_id}
+{% endhighlight %}
+As a result we have 1 initial query to populate `@posts`, and then for each `post`
+we have an additional query to acquire its author. If there are <i>n</i> rows in
+the `posts` table, then there will be <i>n+1</i> queries to the database to load
+this index, slowing down the rendering of the page. How can we avoid this?
+Set `@posts = Post.include(:author)`. This tells Active Record to perform a query
+to the `authors` table to get the related authors, thus turning those `n` queries
+into a single query. Specifically, it will perform
+{% highlight ruby %}
+SELECT authors.* FROM authors WHERE author.id IN (<list of ids from posts table>)
+{% endhighlight %}
+
+Not sure if you're doing this somewhere? There are a few gems to help you look
+for this problem. I recommend the [bullet]: https://github.com/flyerhzm/bullet gem.
 
 <h3>Batching</h3>
-`find_each`
-<h3>n+1</h3>
-`include` is magic.  
-https://github.com/flyerhzm/bullet
+What if your query needs to be large but it is using too much memory? We can
+break these large queries into smaller ones using the `find_each` method.
 
-<h2>Sort Correctly</h2>
-`reverse_order` is not the same as `reverse`
 <h2>Coach the DB</h2>
 <h3>Cache Counters</h3>
 `size` is not the same as `length`
 <h3>Indexes</h3>
 FK's obviously deserve indices, but what other fields could count?
+
+<h2>Summary</h2>
+
+`Post.all.reverse` performs a `SELECT *` and then reverses
+the order, whereas `Post.all.reverse_order` includes an `ORDER BY` statement.
