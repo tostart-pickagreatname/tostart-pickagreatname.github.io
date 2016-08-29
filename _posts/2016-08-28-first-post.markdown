@@ -104,13 +104,11 @@ once.
 
 <h2>Remarks</h2>
 Most of the above was discovered by following a 2-step process.
-1. I found a page that rendered slowly.
-2. I ran the queries in rails console and counted/examined the SQL queries.
 
-<h2>Next Time</h2>
-In the next blog I'll continue this topic with some tweaks which involve migrations,
-including creating indices and using cache counters.
+- I found a page that rendered slowly.
+- I ran the queries in rails console and counted/examined the SQL queries.
+However, many of the efficiencies came only <i>after</i> I knew what I was going
+to use the data for. It's important not to get too hung up on this at an early stage.
 
-<h2>Additional Reading</h2>
 
 [bullet]: https://github.com/flyerhzm/bullet
