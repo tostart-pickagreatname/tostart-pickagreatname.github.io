@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Tuning Active Record Queries"
+title:  "Querying Google Compute with Ruby"
 date:   2016-08-29 15:00:00 -0400
 categories: gcloud api
 ---
