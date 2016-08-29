@@ -33,24 +33,6 @@ also avoiding the large `body` portion of the post.
 Try to avoid using these too early in the development process, or you might find
 yourself being forced to re-add attributes to these calls.
 
-<h3>`reverse` is not `reverse_order`</h3>
-You want to use `reverse_order` instead of `reverse`. `reverse` converts the ActiveRecord::Relation
-into a list. That is, it executes the SQL query and then reverses the returned
-values. If you only want a subset of that list you will be returning much more
-than you need. For example, suppose you are paginating with a gem like `will_paginate`.
-`will_paginate` will try to limit a query to the number of rows it is paginating.
-Indeed, if you do something like
-{% highlight ruby %}
-Post.all.reverse.paginate(page: 1, per_page: 30)
-{% endhighlight %}
-then the SQL query will pull <b>all</b> the records down and paginate the list.
-HOWEVER, if instead you do
-{% highlight ruby %}
-Post.reverse_order.paginate(page: 1, per_page: 30)
-{% endhighlight %}
-then your SQL query will return at most 30 rows, which will scale much more
-efficiently.
-
 <h3>Include Everything You Need</h3>
 Suppose each `Post` `has_one` `author` via `author_id` with an index page for the
 posts which displays each post and its author's name via the `name` attribute of
@@ -79,6 +61,28 @@ SELECT authors.* FROM authors WHERE author.id IN (<list of ids from posts table>
 
 Not sure if you're doing this somewhere? There are a few gems to help you look
 for this problem. I recommend the [bullet gem][bullet].
+
+<h3>Sort Data in the DB</h3>
+Where possible, we should use the database to sort things. Using the `order` method
+is fairly common, but recently I made the mistake of using `reverse` instead of
+`reverse_order` and I think it's worth explaining what happened here.
+Simply put: you want to use `reverse_order` instead of `reverse`. `reverse` converts the ActiveRecord::Relation
+into a list and then sorts it. That is, it executes the SQL query and then reverses the returned
+values. This might not have been an issue when it was first implemented, but if it's chained
+with other Active Record methods you might get surprising behavior. For example,
+suppose you are paginating with a gem like `will_paginate`.
+`will_paginate` will try to limit a query to the number of rows it is paginating.
+Indeed, if you do something like
+{% highlight ruby %}
+Post.all.reverse.paginate(page: 1, per_page: 30)
+{% endhighlight %}
+then the SQL query will pull <b>all</b> the records down and paginate the list.
+HOWEVER, if instead you do
+{% highlight ruby %}
+Post.reverse_order.paginate(page: 1, per_page: 30)
+{% endhighlight %}
+then your SQL query will return at most 30 rows, which will scale much more
+efficiently.
 
 <h3>Batching</h3>
 Suppose processing your query would be fast, but there are a lot of rows, so it's
