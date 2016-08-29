@@ -13,26 +13,24 @@ Google Cloud project running.
 
 Steps:
 
-1. Add Service Account
-
-The service account is typically used for communication from a backend server to
+1. <b>Add Service Account:</b> The service account is typically used for communication from a backend server to
 the Google Cloud APIs. You can create a new service account and download the
 json credential file by following [Google's documentation][service-account].
 
-2. Enable the Associated API
 
+
+2. <b>Enable the Associated API:</b>
 Different Google Cloud components allow querying via different APIs. To make your
 project's data available via an API this API must first be enabled for your project.
 In our case, we'll use the Google Compute Engine API. Go to your project's API
 dashboard, pick the API you're interested in working with, and enable it.
 
-3. Set `googleauth` Creds
+3. <b>Set `googleauth` Creds</b>:
 There are two methods covered below.  Both use data from the service account
 json file along with the `googleauth` gem.  The scope is a list of API endpoints that your authentication is
 supposed to be good for. The scopes are [listed by Google][scopes] for quick reference.
 
-4. Run Your Queries
-
+4. <b>Run Your Queries:</b>
 There are two gems I've used to query google. The `gcloud` gem provides more of a
 high-level administrative view, whereas the `google-api-client` gem gives more
 granular information. Working with the `google-api-client` usually involves
