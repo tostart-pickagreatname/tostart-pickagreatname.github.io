@@ -4,13 +4,21 @@ title:  "Querying Google Compute with Ruby"
 date:   2016-08-29 15:00:00 -0400
 categories: gcloud api
 ---
+<i>work in progress...</i>
+
+Recently I queried the Google Compute API and found the auth. setup to be difficult
+to navigate. I felt that this process needed a single document example workflow,
+which I have chosen to publish here.
 
 <h2>Using .json File</h2>
 Steps:
+
 1. add service account
 2. download json
 3. pick scope
 4. set googleauth creds
+5. create compute service instance
+6. query the instances
 
 `export GOOGLE_APPLICATION_CREDENTIALS=~/secrets.json`
 
@@ -24,7 +32,7 @@ creds = Google::Auth.get_application_default(scopes) #produces a DefaultCredenti
 
 {% endhighlight %}
 
-5. query compute instances
+<h3>query compute instances</h3>
 
 {% highlight ruby %}
 require 'google/apis/compute_v1'
