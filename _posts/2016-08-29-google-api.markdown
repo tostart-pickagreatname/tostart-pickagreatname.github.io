@@ -89,7 +89,7 @@ fejoefjwiof=
 Once this is done `googleauth` will use these environment variables for the
 `get_application_default` message.
 
-<h3>query compute instances</h3>
+<h2>Query Compute Instances</h2>
 Here's a quick and dirty example of how to query the Compute service for a list
 of compute instances. We need to first make the Compute Service instance and then
 tell it what our form of authorization is, referring to the above generations of
