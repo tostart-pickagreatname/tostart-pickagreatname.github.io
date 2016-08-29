@@ -4,7 +4,7 @@ title:  "Querying Google Compute with Ruby"
 date:   2016-08-29 15:00:00 -0400
 categories: gcloud api
 ---
-<i>work in progress...</i>
+<i>Note: This is a work in progress...</i>
 
 Recently I queried the Google Compute API and found the auth. setup to be difficult
 to navigate. I felt that this process needed a single document example workflow,
