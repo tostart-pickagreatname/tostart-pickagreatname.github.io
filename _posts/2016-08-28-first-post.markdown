@@ -60,7 +60,7 @@ Post.reverse_order.paginate(page: 1, per_page: 30)
 then your SQL query will return at most 30 rows, which will scale much more
 efficiently.
 
-<h3>Including Everything You Need</h3>
+<h3>Include Everything You Need</h3>
 Suppose each `Post` `has_one` `author` via `author_id` with an index page for the
 posts which displays each post and its author's name via the `name` attribute of
 `Author`.  Suppose you do this with `@posts = Post.all` in the controller and
@@ -90,18 +90,27 @@ Not sure if you're doing this somewhere? There are a few gems to help you look
 for this problem. I recommend the [bullet gem][bullet].
 
 <h3>Batching</h3>
-What if your query needs to be large but it is using too much memory? We can
-break these large queries into smaller ones using the `find_each` method.
+Suppose processing your query would be fast, but it's taking up too much memory?
+If there are a large number of rows in the table, we may use `find_each` to break
+the query up into batches to reduce memory usage. The default batch size is 1000. If we want to perform
+a block against every post using a method of `update_post`, we could do this by
+{% highlight ruby %}
+Post.find_each(batch_size: 10) do |post|
+  post.update_post
+end
+{% endhighlight %}
+The result would be a series of queries for 10 records apiece, rather than all at
+once.
 
-<h2>Coach the DB</h2>
-<h3>Cache Counters</h3>
-`size` is not the same as `length`
-<h3>Indexes</h3>
-FK's obviously deserve indices, but what other fields could count?
+<h2>Remarks</h2>
+Most of the above was discovered by following a 2-step process.
+1. I found a page that rendered slowly.
+2. I ran the queries in rails console and counted/examined the SQL queries.
 
-<h2>Summary</h2>
+<h2>Next Time</h2>
+In the next blog I'll continue this topic with some tweaks which involve migrations,
+including creating indices and using cache counters.
 
-`Post.all.reverse` performs a `SELECT *` and then reverses
-the order, whereas `Post.all.reverse_order` includes an `ORDER BY` statement.
+<h2>Additional Reading</h2>
 
 [bullet]: https://github.com/flyerhzm/bullet
