@@ -60,12 +60,13 @@ PRIVATE_KEY_VAR = 'GOOGLE_PRIVATE_KEY'.freeze
 CLIENT_EMAIL_VAR = 'GOOGLE_CLIENT_EMAIL'.freeze
 ACCOUNT_TYPE_VAR = 'GOOGLE_ACCOUNT_TYPE'.freeze
 {% endhighlight %}
+
 and these are the three variables required. To set them, we simply open up our
 downloaded json file and pull out the variables that are relevant. The association is
 
-- GOOGLE_PRIVATE_KEY is private_key
-- GOOGLE_CLIENT_EMAIL is client_email
-- GOOGLE_ACCOUNT_TYPE is type
+- GOOGLE_PRIVATE_KEY <-> private_key
+- GOOGLE_CLIENT_EMAIL <-> client_email
+- GOOGLE_ACCOUNT_TYPE <-> type
 
 <i>Note: The private_key is a multi-line string. Use of `\n` in this environment
 variable will not turn into newlines in rails and will result in `nested asn1 error`.
@@ -80,6 +81,7 @@ theexplicitnewlinecahracters
 fejoefjwiof=
 -----END PRIVATE KEY-----
 "
+{% endhighlight %}
 Once this is done `googleauth` will use these environment variables for the
 `get_application_default` message.
 
