@@ -22,9 +22,12 @@ you just want a list of titles: `Post.pluck(:title)` performs
 {% highlight ruby %}
 SELECT posts.title FROM posts
 {% endhighlight %}
-avoiding the large `body` portion of the post.
+avoiding the large `body` portion of the post. It is important to note that pluck
+is really most useful for
+display and aggregation, as it loses structure and retrieves
+a simple list of values.
 
-<i>Want more attributes?</i> Use `select`: `Post.select(:title, :author)` executes
+<i>Want more attributes or need the Active Record objects?</i> Use `select`: `Post.select(:title, :author)` executes
 {% highlight ruby %}
 SELECT posts.title posts.author FROM posts
 {% endhighlight %}
